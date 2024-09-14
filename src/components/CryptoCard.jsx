@@ -1,17 +1,27 @@
 import React from 'react';
+import { BookmarkIcon } from 'lucide-react';
+import { useBookmark } from '../hooks/useBookmark';
 
 const CryptoCard = ({ crypto }) => {
+  const { isBookmarked, toggleBookmark } = useBookmark(crypto);
+
   if (!crypto) {
     return null;
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div className="bg-white rounded-lg shadow-md p-4 relative">
       <div className="flex items-center mb-2">
         {crypto.icon && (
           <img src={crypto.icon} alt={crypto.header} className="w-10 h-10 mr-2 rounded-full" />
         )}
         <h2 className="text-lg font-semibold">{crypto.header || 'Unknown'}</h2>
+        <button
+          onClick={() => toggleBookmark(crypto)}
+          className="absolute top-2 right-2 text-gray-500 hover:text-yellow-500 transition-colors"
+        >
+          <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
+        </button>
       </div>
       {crypto.description && (
         <p className="text-sm text-gray-600 mb-2">{crypto.description}</p>
