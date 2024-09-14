@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import CryptoCard from '../components/CryptoCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader } from 'lucide-react';
+import { Icon } from 'lucide-react';
+import { astronautHelmet } from '@lucide/lab';
 
 const fetchData = async (url) => {
   const response = await fetch(url);
@@ -48,7 +50,10 @@ const Index = () => {
 
   return (
     <div className="pb-16">
-      <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
+      <div className='flex items-center justify-between px-5'>
+        <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
+        <Icon iconNode={astronautHelmet} />
+      </div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="main">Main</TabsTrigger>
