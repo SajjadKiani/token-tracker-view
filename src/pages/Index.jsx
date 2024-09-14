@@ -24,9 +24,13 @@ const Index = () => {
     <div className="pb-16">
       <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
       <div className="space-y-4 px-4">
-        {data && data.map((crypto, index) => (
-          <CryptoCard key={index} crypto={crypto} />
-        ))}
+        {Array.isArray(data) && data.length > 0 ? (
+          data.map((crypto, index) => (
+            <CryptoCard key={index} crypto={crypto} />
+          ))
+        ) : (
+          <p className="text-center">No crypto data available</p>
+        )}
       </div>
       <BottomNavbar />
     </div>
