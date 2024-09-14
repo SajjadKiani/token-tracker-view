@@ -33,7 +33,7 @@ const CryptoCard = ({ crypto }) => {
       )}
       <div className="text-xs text-gray-500">
         {crypto.chainId && <p>Chain ID: {crypto.chainId}</p>}
-        {crypto.tokenAddress && <p>Token Address: {crypto.tokenAddress}</p>}
+        {crypto.tokenAddress && <p className='truncate'>Token Address: <br /> {crypto.tokenAddress}</p>}
         {crypto.amount !== undefined && <p>Amount: {crypto.amount}</p>}
         {crypto.totalAmount !== undefined && <p>Total Amount: {crypto.totalAmount}</p>}
       </div>
