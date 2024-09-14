@@ -18,12 +18,16 @@ const BottomNavbar = () => {
           <Link
             key={item.to}
             to={item.to}
-            className={`p-2 ${
-              location.pathname === item.to ? 'text-primary bg-white rounded-full' : 'text-white'
+            className={`p-2 flex gap-1 items-center transition-all duration-500 ease-in-out ${
+              location.pathname === item.to ? 'text-primary bg-white rounded-full ' : 'text-white'
             }`}
           >
             <item.icon className="h-6 w-6" />
-            {/* <span className="text-xs mt-1">{item.label}</span> */}
+            {location.pathname === item.to && (
+              <span className="text-xs font-bold">
+                {item.label}
+              </span>
+            )}
           </Link>
         ))}
       </div>
