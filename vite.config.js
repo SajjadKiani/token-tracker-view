@@ -17,52 +17,62 @@ export default defineConfig({
       devOptions: {
         enabled: true
       },
-      manifest: {  
-        description: 'crypto tracker app developed by saji',
-        name: 'Crypto Tracker',  
-        short_name: 'Crypto Tracker',  
-        start_url: '/',  
-        display: 'standalone',  
-        background_color: '#ffffff',  
-        theme_color: '#ffffff',  
-        screenshots: [
+      manifest: {
+        "name": "Crypto Tracker",
+        "short_name": "Crypto Tracker",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "lang": "en",
+        "scope": "/",
+        "description": "crypto tracker app developed by saji",
+        "theme_color": "#ffffff",
+        "screenshots": [
           {
-            // src: 'screenshot.png',
-            // sizes: '320x320',
-            label: 'crypto tracker',
-            platform: 'android',
-            form_factor: 'narrow'
+            "label": "crypto tracker",
+            "platform": "android",
+            "form_factor": "narrow"
           },
           {
-            // src: 'screenshot.png',
-            // sizes: '320x320',
-            label: 'crypto tracker',
-            form_factor: 'wide'
-          },
+            "label": "crypto tracker",
+            "form_factor": "wide"
+          }
         ],
-        icons: [  
-          {  
-            src: 'icon-72.png',  
-            sizes: '72x72',  
-            type: 'image/png',  
-          },  
-          {  
-            src: 'icon-96.png',  
-            sizes: '96x96',  
-            type: 'image/png',  
-          },  
-          {  
-            src: 'icon-144.png',  
-            sizes: '200x200',  
-            type: 'image/png',  
+        "icons": [
+          {
+            "src": "icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png"
           },
-          {  
-            src: 'screenshot-512.png',  
-            sizes: '512x512',  
-            type: 'image/png',  
-          },  
-        ],  
-      },
+          {
+            "src": "icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+          },
+          {
+            "src": "icon-144.png",
+            "sizes": "200x200",
+            "type": "image/png"
+          },
+          {
+            "src": "screenshot-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }
+        ],
+        "id": "crypto_tracker",
+        "dir": "auto",
+        "orientation": "natural",
+        "categories": [
+          "business",
+          "finance"
+        ],
+        "display_override": [
+          "standalone",
+          "fullscreen",
+          "window-controls-overlay"
+        ]
+      }
     })
   ],
   resolve: {

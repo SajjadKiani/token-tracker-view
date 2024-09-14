@@ -65,6 +65,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@bubblewrap/cli": "^1.22.0",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
