@@ -49,8 +49,8 @@ const Index = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="main">Main</TabsTrigger>
-          <TabsTrigger value="boosted">Boosted Tokens</TabsTrigger>
-          <TabsTrigger value="topBoosts">Most Active Boosts</TabsTrigger>
+          <TabsTrigger value="boosted">Boost</TabsTrigger>
+          <TabsTrigger value="topBoosts">Active</TabsTrigger>
         </TabsList>
         <TabsContent value="main">
           {renderContent(mainData, mainLoading, mainError)}
