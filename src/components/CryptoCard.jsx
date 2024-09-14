@@ -11,20 +11,25 @@ const CryptoCard = ({ crypto }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 relative">
-      <div className="flex items-center mb-2">
+      <div className='w-100'>
+        {crypto.header &&
+          <img src={crypto.header} alt='header' />
+        }
+      </div>
+      <div className="flex justify-between mt-5 items-center mb-2">
         {crypto.icon && (
           <img src={crypto.icon} alt={crypto.header} className="w-10 h-10 mr-2 rounded-full" />
         )}
-        <h2 className="text-lg font-semibold">{crypto.header || 'Unknown'}</h2>
+        {/* <h2 className="text-lg font-semibold">{crypto.header || 'Unknown'}</h2> */}
         <button
           onClick={() => toggleBookmark(crypto)}
-          className="absolute top-2 right-2 text-gray-500 hover:text-yellow-500 transition-colors"
+          className=" text-gray-500 hover:text-yellow-500 transition-colors"
         >
           <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
         </button>
       </div>
       {crypto.description && (
-        <p className="text-sm text-gray-600 mb-2">{crypto.description}</p>
+        <p className="text-sm text-gray-600 mb-2 line-clamp-3">{crypto.description}</p>
       )}
       <div className="text-xs text-gray-500">
         {crypto.chainId && <p>Chain ID: {crypto.chainId}</p>}
