@@ -30,6 +30,7 @@ export default defineConfig({
             src: 'screenshot.png',
             sizes: '320x320',
             label: 'crypto tracker',
+            platform: 'android',
             form_factor: 'narrow'
           },
           {
