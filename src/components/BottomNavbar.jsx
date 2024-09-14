@@ -12,18 +12,18 @@ const BottomNavbar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-      <div className="flex justify-around">
+    <nav className="fixed bottom-4 left-4 rounded-[18px] shadow-md right-4 bg-primary/90 py-1">
+      <div className="flex justify-around items-center">
         {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
-            className={`flex flex-col items-center py-2 px-4 ${
-              location.pathname === item.to ? 'text-blue-500' : 'text-gray-500'
+            className={`p-2 ${
+              location.pathname === item.to ? 'text-primary bg-white rounded-full' : 'text-white'
             }`}
           >
             <item.icon className="h-6 w-6" />
-            <span className="text-xs mt-1">{item.label}</span>
+            {/* <span className="text-xs mt-1">{item.label}</span> */}
           </Link>
         ))}
       </div>
