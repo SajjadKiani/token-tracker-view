@@ -40,7 +40,7 @@ const Index = () => {
     if (!Array.isArray(data) || data.length === 0) return <p className="text-center">No data available</p>;
 
     return (
-      <div className="space-y-4 px-4">
+      <div className="space-y-4 bg-white">
         {data.map((item, index) => (
           <CryptoCard key={index} crypto={item} />
         ))}
@@ -49,11 +49,12 @@ const Index = () => {
   };
 
   return (
-    <div className="pb-16">
-      <div className='flex items-center justify-between px-5'>
+    <div className="pb-16 bg-primary">
+      <div className='flex items-center justify-between px-5 bg-primary text-primary-foreground'>
         <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
         <Icon iconNode={astronautHelmet} />
       </div>
+      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="main">Main</TabsTrigger>
@@ -70,6 +71,7 @@ const Index = () => {
           {renderContent(topBoostsData, topBoostsLoading, topBoostsError)}
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 };
