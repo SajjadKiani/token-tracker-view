@@ -55,6 +55,11 @@ export default defineConfig({
             src: 'icon-144.png',  
             sizes: '200x200',  
             type: 'image/png',  
+          },
+          {  
+            src: 'screenshot-512.png',  
+            sizes: '512x512',  
+            type: 'image/png',  
           },  
         ],  
       },
