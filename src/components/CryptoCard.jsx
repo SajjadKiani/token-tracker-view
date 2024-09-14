@@ -2,7 +2,7 @@ import React from 'react';
 
 const CryptoCard = ({ crypto }) => {
   if (!crypto) {
-    return null; // or return a placeholder component
+    return null;
   }
 
   return (
@@ -19,6 +19,8 @@ const CryptoCard = ({ crypto }) => {
       <div className="text-xs text-gray-500">
         {crypto.chainId && <p>Chain ID: {crypto.chainId}</p>}
         {crypto.tokenAddress && <p>Token Address: {crypto.tokenAddress}</p>}
+        {crypto.amount !== undefined && <p>Amount: {crypto.amount}</p>}
+        {crypto.totalAmount !== undefined && <p>Total Amount: {crypto.totalAmount}</p>}
       </div>
       {crypto.links && crypto.links.length > 0 && (
         <div className="mt-2">
