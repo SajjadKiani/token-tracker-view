@@ -27,15 +27,15 @@ export default defineConfig({
         theme_color: '#ffffff',  
         screenshots: [
           {
-            src: 'screenshot.png',
-            sizes: '320x320',
+            // src: 'screenshot.png',
+            // sizes: '320x320',
             label: 'crypto tracker',
             platform: 'android',
             form_factor: 'narrow'
           },
           {
-            src: 'screenshot.png',
-            sizes: '320x320',
+            // src: 'screenshot.png',
+            // sizes: '320x320',
             label: 'crypto tracker',
             form_factor: 'wide'
           },
