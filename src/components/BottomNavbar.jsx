@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIcon, SearchIcon, BookmarkIcon } from 'lucide-react';
+import { HomeIcon, SearchIcon, BookmarkIcon, BarChart2Icon } from 'lucide-react';
 
 const BottomNavbar = () => {
   const location = useLocation();
@@ -9,25 +9,20 @@ const BottomNavbar = () => {
     { to: '/', icon: HomeIcon, label: 'Home' },
     { to: '/search', icon: SearchIcon, label: 'Search' },
     { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
+    { to: '/chart', icon: BarChart2Icon, label: 'Chart' },
   ];
 
   return (
-    <nav className="fixed bottom-4 left-4 rounded-[18px] shadow-md right-4 bg-primary/90 py-1">
-      <div className="flex justify-around items-center">
+    <nav className="bottom-nav">
+      <div className="bottom-nav-content">
         {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
-            className={`p-2 flex gap-1 items-center transition-all duration-500 ease-in-out ${
-              location.pathname === item.to ? 'text-primary bg-white rounded-full ' : 'text-white'
-            }`}
+            className={`bottom-nav-item ${location.pathname === item.to ? 'active' : ''}`}
           >
             <item.icon className="h-6 w-6" />
-            {location.pathname === item.to && (
-              <span className="text-xs font-bold">
-                {item.label}
-              </span>
-            )}
+            <span className="text-xs mt-1">{item.label}</span>
           </Link>
         ))}
       </div>

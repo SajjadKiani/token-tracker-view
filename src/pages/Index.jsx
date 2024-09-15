@@ -1,16 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import CryptoCard from '../components/CryptoCard';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader } from 'lucide-react';
 import Header from '../components/Header';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 const fetchData = async (url) => {
   const response = await fetch(url);
@@ -21,88 +13,89 @@ const fetchData = async (url) => {
 };
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState("main");
+  const [activeTab, setActiveTab] = useState("all");
   const [selectedChainId, setSelectedChainId] = useState("all");
 
-  const { data: mainData, isLoading: mainLoading, error: mainError } = useQuery({
-    queryKey: ['mainData'],
-    queryFn: () => fetchData('https://api.dexscreener.com/token-profiles/latest/v1'),
-  });
-
-  const { data: boostedData, isLoading: boostedLoading, error: boostedError } = useQuery({
-    queryKey: ['boostedData'],
-    queryFn: () => fetchData('https://api.dexscreener.com/token-boosts/latest/v1'),
-  });
-
-  const { data: topBoostsData, isLoading: topBoostsLoading, error: topBoostsError } = useQuery({
-    queryKey: ['topBoostsData'],
-    queryFn: () => fetchData('https://api.dexscreener.com/token-boosts/top/v1'),
+  const { data: cryptoData, isLoading, error } = useQuery({
+    queryKey: ['cryptoData'],
+    queryFn: () => fetchData('https://api.example.com/crypto'), // Replace with actual API endpoint
   });
 
   const chainIds = useMemo(() => {
-    const allData = [...(mainData || []), ...(boostedData || []), ...(topBoostsData || [])];
-    const uniqueChainIds = [...new Set(allData.map(item => item.chainId))];
-    return uniqueChainIds.sort();
-  }, [mainData, boostedData, topBoostsData]);
+    if (!cryptoData) return [];
+    const uniqueChainIds = [...new Set(cryptoData.map(item => item.chainId))];
+    return ["all", ...uniqueChainIds.sort()];
+  }, [cryptoData]);
 
-  const filterDataByChainId = (data) => {
-    if (selectedChainId === "all") return data;
-    return data.filter(item => item.chainId === selectedChainId);
-  };
+  const filteredData = useMemo(() => {
+    if (!cryptoData) return [];
+    return cryptoData.filter(crypto => 
+      (selectedChainId === "all" || crypto.chainId === selectedChainId) &&
+      (activeTab === "all" || 
+       (activeTab === "gainers" && crypto.priceChange24h > 0) ||
+       (activeTab === "losers" && crypto.priceChange24h < 0))
+    );
+  }, [cryptoData, selectedChainId, activeTab]);
 
-  const renderContent = (data, isLoading, error) => {
+  const renderContent = () => {
     if (isLoading) return <div className="flex justify-center items-center h-40">
       <Loader className='animate-spin text-primary w-8 h-8' />
     </div>;
-    if (error) return <div className="flex justify-center items-center h-40">Error: {error.message}</div>;
-    if (!Array.isArray(data) || data.length === 0) return <p className="text-center">No data available</p>;
-
-    const filteredData = filterDataByChainId(data);
+    if (error) return <div className="flex justify-center items-center h-40 text-destructive">Error: {error.message}</div>;
+    if (filteredData.length === 0) return <p className="text-center text-muted">No data available</p>;
 
     return (
-      <div className="space-y-4 bg-white">
-        {filteredData.map((item, index) => (
-          <CryptoCard key={index} crypto={item} />
+      <div className="space-y-4">
+        {filteredData.map((crypto, index) => (
+          <CryptoCard key={index} crypto={crypto} />
         ))}
       </div>
     );
   };
 
   return (
-    <div className="pb-16 bg-primary">
+    <div className="pb-16 bg-background">
       <Header />
-      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
+      <div className='pt-6 px-4'>
+        <input
+          type="text"
+          placeholder="Search coin pairs"
+          className="search-bar mb-4"
+        />
         <div className="mb-4">
-          <Select value={selectedChainId} onValueChange={setSelectedChainId}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Filter by Chain ID" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Chains</SelectItem>
-              {chainIds.map((chainId) => (
-                <SelectItem key={chainId} value={chainId}>
-                  {chainId}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select 
+            value={selectedChainId} 
+            onChange={(e) => setSelectedChainId(e.target.value)}
+            className="w-full bg-background border border-muted rounded-md px-2 py-1"
+          >
+            {chainIds.map((chainId) => (
+              <option key={chainId} value={chainId}>
+                {chainId === "all" ? "All Chains" : `Chain ${chainId}`}
+              </option>
+            ))}
+          </select>
         </div>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="main">Main</TabsTrigger>
-            <TabsTrigger value="boosted">Boost</TabsTrigger>
-            <TabsTrigger value="topBoosts">Active</TabsTrigger>
-          </TabsList>
-          <TabsContent value="main">
-            {renderContent(mainData, mainLoading, mainError)}
-          </TabsContent>
-          <TabsContent value="boosted">
-            {renderContent(boostedData, boostedLoading, boostedError)}
-          </TabsContent>
-          <TabsContent value="topBoosts">
-            {renderContent(topBoostsData, topBoostsLoading, topBoostsError)}
-          </TabsContent>
-        </Tabs>
+        <div className="tab-list">
+          <button 
+            className={`tab ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => setActiveTab("all")}
+          >
+            All Cryptos
+          </button>
+          <button 
+            className={`tab ${activeTab === "gainers" ? "active" : ""}`}
+            onClick={() => setActiveTab("gainers")}
+          >
+            Gainers
+          </button>
+          <button 
+            className={`tab ${activeTab === "losers" ? "active" : ""}`}
+            onClick={() => setActiveTab("losers")}
+          >
+            Losers
+          </button>
+        </div>
+        {renderContent()}
       </div>
     </div>
   );
