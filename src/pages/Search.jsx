@@ -8,7 +8,7 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const fetchSearchResults = async (query) => {
-    if (!query) return [];
+    if (!query) return { pairs: [] };
     const response = await fetch(`https://api.dexscreener.com/latest/dex/search?q=${query}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -45,7 +45,10 @@ const Search = () => {
               chainId: pair.chainId,
               tokenAddress: pair.baseToken.address,
               icon: pair.info?.imageUrl,
-              description: `${pair.baseToken.symbol}/${pair.quoteToken.symbol}`,
+              header: `${pair.baseToken.symbol}/${pair.quoteToken.symbol}`,
+              description: `${pair.baseToken.name} / ${pair.quoteToken.name}`,
+              amount: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(4)}` : 'N/A',
+              totalAmount: pair.liquidity?.usd ? `$${pair.liquidity.usd.toLocaleString()}` : 'N/A',
               links: [
                 { label: 'View on DEX', url: pair.url },
                 ...(pair.info?.websites?.map(website => ({ label: 'Website', url: website.url })) || []),
@@ -65,7 +68,7 @@ const Search = () => {
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
-        placeholder="Search for cryptocurrencies..."
+        placeholder="Search for tokens (e.g., SOL/USDT)"
         className="w-full p-2 border border-gray-300 rounded-md"
       />
       {renderSearchResults()}
