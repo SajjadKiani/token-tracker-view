@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookmarkIcon, ExternalLinkIcon } from 'lucide-react';
 import { useBookmark } from '../hooks/useBookmark';
+import { Link } from 'react-router-dom';
 
 const SearchResultCard = ({ pair }) => {
   const { isBookmarked, toggleBookmark } = useBookmark(pair);
@@ -50,6 +51,14 @@ const SearchResultCard = ({ pair }) => {
           >
             View on DEX <ExternalLinkIcon className="h-4 w-4 ml-1" />
           </a>
+        )}
+        {pair.baseToken?.address && (
+          <Link
+            to={`/token/${pair.chainId}/${pair.baseToken.address}`}
+            className="text-blue-500 text-sm flex items-center hover:underline"
+          >
+            Token Details <ExternalLinkIcon className="h-4 w-4 ml-1" />
+          </Link>
         )}
         {pair.info?.websites?.map((website, index) => (
           <a

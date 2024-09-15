@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookmarkIcon } from 'lucide-react';
 import { useBookmark } from '../hooks/useBookmark';
+import { Link } from 'react-router-dom';
 
 const CryptoCard = ({ crypto }) => {
   const { isBookmarked, toggleBookmark } = useBookmark(crypto);
@@ -20,7 +21,6 @@ const CryptoCard = ({ crypto }) => {
         {crypto.icon && (
           <img src={crypto.icon} alt={crypto.header} className="w-10 h-10 mr-2 rounded-full" />
         )}
-        {/* <h2 className="text-lg font-semibold">{crypto.header || 'Unknown'}</h2> */}
         <button
           onClick={() => toggleBookmark(crypto)}
           className=" text-gray-500 hover:text-yellow-500 transition-colors"
@@ -33,7 +33,17 @@ const CryptoCard = ({ crypto }) => {
       )}
       <div className="text-xs text-gray-500">
         {crypto.chainId && <p>Chain ID: {crypto.chainId}</p>}
-        {crypto.tokenAddress && <p className='truncate'>Token Address: <br /> {crypto.tokenAddress}</p>}
+        {crypto.tokenAddress && (
+          <p className='truncate'>
+            Token Address: <br />
+            <Link
+              to={`/token/${crypto.chainId}/${crypto.tokenAddress}`}
+              className="text-blue-500 hover:underline"
+            >
+              {crypto.tokenAddress}
+            </Link>
+          </p>
+        )}
         {crypto.amount !== undefined && <p>Amount: {crypto.amount}</p>}
         {crypto.totalAmount !== undefined && <p>Total Amount: {crypto.totalAmount}</p>}
       </div>

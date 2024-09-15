@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import BottomNavbar from "./components/BottomNavbar";
+import TokenDetails from "./pages/TokenDetails";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
             {navItems.map(({ to, page }) => (
               <Route key={to} path={to} element={page} />
             ))}
+            <Route path="/token/:chainId/:tokenAddress" element={<TokenDetails />} />
           </Routes>
         </div>
         <BottomNavbar />
