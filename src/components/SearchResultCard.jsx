@@ -63,25 +63,13 @@ const SearchResultCard = ({ pair }) => {
         </div>
       </div>
       <Separator />
-      <div className='text-sm grid grid-cols-2'>
-          <strong className='mr-2'> Price Change(%): </strong>
-          <div className='grid grid-cols-2 gap-1'>
-            <p>5m: {formatPriceChange(pair?.priceChange?.m5)}</p>
-            <p>1h: {formatPriceChange(pair?.priceChange?.h1)}</p>
-            <p>6h: {formatPriceChange(pair?.priceChange?.h6)}</p>
-            <p>24h: {formatPriceChange(pair?.priceChange?.h24)}</p>
-          </div>
+      {['m5', 'h1', 'h6', 'h24'].map((time, index) =>
+      <div className='text-sm grid grid-cols-3' key={index} >
+          <strong className='mr-2'> {time}: </strong>
+          <p>{formatPriceChange(pair?.priceChange?.[time])} </p>
+          <p>${formatNumber(pair?.volume?.[time])} </p>
       </div>
-      <Separator />
-      <div className='text-sm  grid grid-cols-2'>
-        <strong className='mr-2'> Volume: </strong>
-        <div className='grid grid-cols-2 gap-1'> 
-          <p> 5m: ${formatNumber(pair?.volume?.m5)} </p>
-          <p> 1h: ${formatNumber(pair?.volume?.h1)} </p>
-          <p> 6h: ${formatNumber(pair?.volume?.h6)} </p>
-          <p> 24h: ${formatNumber(pair?.volume?.h24)} </p>  
-        </div>
-      </div>
+      )}
       <Separator />
       <div className="mt-2 flex flex-wrap gap-2">
         {pair.url && (

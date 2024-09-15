@@ -60,7 +60,7 @@ const Index = () => {
     const filteredData = filterDataByChainId(data);
 
     return (
-      <div className="space-y-4 bg-white">
+      <div className="space-y-4">
         {filteredData.map((item, index) => (
           <CryptoCard key={index} crypto={item} />
         ))}
@@ -69,9 +69,9 @@ const Index = () => {
   };
 
   return (
-    <div className="pb-16 bg-primary">
+    <div className="bg-primary">
       <Header />
-      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
+      <div className='rounded-t-3xl pt-6 bg-background shadow-t-xl mt-4 px-4'>
         <div className="mb-4">
           <Select value={selectedChainId} onValueChange={setSelectedChainId}>
             <SelectTrigger className="w-full">

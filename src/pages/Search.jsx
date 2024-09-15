@@ -4,6 +4,7 @@ import { debounce } from 'lodash';
 import { Loader } from 'lucide-react';
 import SearchResultCard from '../components/SearchResultCard';
 import Header from '../components/Header';
+import { Input } from '@/components/ui/input';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,15 +48,14 @@ const Search = () => {
   };
 
   return (
-    <div className="pb-16 bg-primary">
+    <div className="bg-primary">
       <Header />
-      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
-        <input
+      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4 shadow-t-xl'>
+        <Input
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Search for tokens (e.g., SOL/USDT)"
-          className="w-full p-2 border border-gray-300 rounded-md"
         />
         {renderSearchResults()}
       </div>

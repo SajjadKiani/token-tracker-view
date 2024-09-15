@@ -20,9 +20,9 @@ const Bookmark = () => {
   }, []);
 
   return (
-    <div className="pb-16 bg-primary">
+    <div className="bg-primary">
       <Header />
-      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
+      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
         {bookmarks.length === 0 ? (
           <p>You haven't bookmarked any cryptocurrencies yet.</p>
         ) : (
