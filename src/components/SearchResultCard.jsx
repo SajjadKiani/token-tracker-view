@@ -40,12 +40,12 @@ const SearchResultCard = ({ pair }) => {
           )}
           <h2 className="text-lg font-semibold">{`${pair.baseToken?.symbol || 'Unknown'}/${pair.quoteToken?.symbol || 'Unknown'}`}</h2>
         </div>
-        <button
+        {/* <button
           onClick={() => toggleBookmark(pair)}
           className="text-gray-500 hover:text-yellow-500 transition-colors"
         >
           <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
-        </button>
+        </button> */}
       </div>
       <p className="text-sm text-gray-600 mb-2">{`${pair.baseToken?.name || 'Unknown'} / ${pair.quoteToken?.name || 'Unknown'}`}</p>
       <div className="grid grid-cols-2 gap-2 text-sm">
