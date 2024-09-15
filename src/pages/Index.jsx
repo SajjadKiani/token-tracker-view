@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import CryptoCard from '../components/CryptoCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader } from 'lucide-react';
-import { Icon } from 'lucide-react';
-import { astronautHelmet } from '@lucide/lab';
+import Header from '../components/Header';
 
 const fetchData = async (url) => {
   const response = await fetch(url);
@@ -34,7 +33,7 @@ const Index = () => {
 
   const renderContent = (data, isLoading, error) => {
     if (isLoading) return <div className="flex justify-center items-center h-40">
-      <Loader className=' animate-spin text-primary w-8 h-8' />
+      <Loader className='animate-spin text-primary w-8 h-8' />
     </div>;
     if (error) return <div className="flex justify-center items-center h-40">Error: {error.message}</div>;
     if (!Array.isArray(data) || data.length === 0) return <p className="text-center">No data available</p>;
@@ -50,27 +49,24 @@ const Index = () => {
 
   return (
     <div className="pb-16 bg-primary">
-      <div className='flex items-center justify-between px-5 bg-primary text-primary-foreground'>
-        <h1 className="text-2xl font-bold text-center my-4">Crypto Tracker</h1>
-        <Icon iconNode={astronautHelmet} />
-      </div>
+      <Header />
       <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="main">Main</TabsTrigger>
-          <TabsTrigger value="boosted">Boost</TabsTrigger>
-          <TabsTrigger value="topBoosts">Active</TabsTrigger>
-        </TabsList>
-        <TabsContent value="main">
-          {renderContent(mainData, mainLoading, mainError)}
-        </TabsContent>
-        <TabsContent value="boosted">
-          {renderContent(boostedData, boostedLoading, boostedError)}
-        </TabsContent>
-        <TabsContent value="topBoosts">
-          {renderContent(topBoostsData, topBoostsLoading, topBoostsError)}
-        </TabsContent>
-      </Tabs>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="main">Main</TabsTrigger>
+            <TabsTrigger value="boosted">Boost</TabsTrigger>
+            <TabsTrigger value="topBoosts">Active</TabsTrigger>
+          </TabsList>
+          <TabsContent value="main">
+            {renderContent(mainData, mainLoading, mainError)}
+          </TabsContent>
+          <TabsContent value="boosted">
+            {renderContent(boostedData, boostedLoading, boostedError)}
+          </TabsContent>
+          <TabsContent value="topBoosts">
+            {renderContent(topBoostsData, topBoostsLoading, topBoostsError)}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

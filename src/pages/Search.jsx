@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { Loader } from 'lucide-react';
 import SearchResultCard from '../components/SearchResultCard';
+import Header from '../components/Header';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,16 +47,18 @@ const Search = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Search</h1>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search for tokens (e.g., SOL/USDT)"
-        className="w-full p-2 border border-gray-300 rounded-md"
-      />
-      {renderSearchResults()}
+    <div className="pb-16 bg-primary">
+      <Header />
+      <div className='rounded-t-3xl pt-6 bg-white mt-4 px-4'>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search for tokens (e.g., SOL/USDT)"
+          className="w-full p-2 border border-gray-300 rounded-md"
+        />
+        {renderSearchResults()}
+      </div>
     </div>
   );
 };
