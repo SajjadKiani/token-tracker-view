@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { Loader } from 'lucide-react';
-import CryptoCard from '../components/CryptoCard';
+import SearchResultCard from '../components/SearchResultCard';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,23 +39,7 @@ const Search = () => {
     return (
       <div className="space-y-4 mt-4">
         {data.pairs.map((pair, index) => (
-          <CryptoCard
-            key={index}
-            crypto={{
-              chainId: pair.chainId,
-              tokenAddress: pair.baseToken.address,
-              icon: pair.info?.imageUrl,
-              header: `${pair.baseToken.symbol}/${pair.quoteToken.symbol}`,
-              description: `${pair.baseToken.name} / ${pair.quoteToken.name}`,
-              amount: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(4)}` : 'N/A',
-              totalAmount: pair.liquidity?.usd ? `$${pair.liquidity.usd.toLocaleString()}` : 'N/A',
-              links: [
-                { label: 'View on DEX', url: pair.url },
-                ...(pair.info?.websites?.map(website => ({ label: 'Website', url: website.url })) || []),
-                ...(pair.info?.socials?.map(social => ({ label: social.platform, url: `https://${social.platform}.com/${social.handle}` })) || []),
-              ],
-            }}
-          />
+          <SearchResultCard key={index} pair={pair} />
         ))}
       </div>
     );
