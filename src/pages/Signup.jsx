@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../integrations/supabase/supabase';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,16 @@ const Signup = () => {
   const [emailSent, setEmailSent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    let timer;
+    if (cooldown > 0) {
+      timer = setInterval(() => {
+        setCooldown((prevCooldown) => prevCooldown - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -38,15 +48,6 @@ const Signup = () => {
       if (error) {
         if (error.status === 429) {
           setCooldown(60);
-          const interval = setInterval(() => {
-            setCooldown((prev) => {
-              if (prev <= 1) {
-                clearInterval(interval);
-                return 0;
-              }
-              return prev - 1;
-            });
-          }, 1000);
           throw new Error("Email rate limit exceeded. Please try again later.");
         }
         throw error;
@@ -91,15 +92,6 @@ const Signup = () => {
         description: "Please check your email for the confirmation link.",
       });
       setCooldown(60);
-      const interval = setInterval(() => {
-        setCooldown((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
     } catch (error) {
       toast({
         title: "Resend Failed",
