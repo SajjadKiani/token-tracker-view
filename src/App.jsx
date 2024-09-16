@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import BottomNavbar from "./components/BottomNavbar";
 import TokenDetails from "./pages/TokenDetails";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,8 @@ const App = () => (
               <Route key={to} path={to} element={page} />
             ))}
             <Route path="/token/:chainId/:tokenAddress" element={<TokenDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </div>
         <BottomNavbar />

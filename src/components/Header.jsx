@@ -19,6 +19,10 @@ const Header = () => {
         return 'Search';
       case '/bookmark':
         return 'Bookmarks';
+      case '/login':
+        return 'Login';
+      case '/signup':
+        return 'Sign Up';
       default:
         if (location.pathname.startsWith('/token/')) {
           return 'Token Details';
