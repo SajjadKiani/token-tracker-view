@@ -7,7 +7,7 @@ import BottomNavbar from "./components/BottomNavbar";
 import TokenDetails from "./pages/TokenDetails";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { useSupabaseAuth } from "./integrations/supabase";
+import { SupabaseAuthProvider, useSupabaseAuth } from "./integrations/supabase";
 
 const queryClient = new QueryClient();
 
@@ -26,31 +26,33 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <BrowserRouter>
-        <div className="pb-16">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            {navItems.map(({ to, page }) => (
+        <SupabaseAuthProvider>
+          <div className="pb-16">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              {navItems.map(({ to, page }) => (
+                <Route 
+                  key={to} 
+                  path={to} 
+                  element={
+                    <ProtectedRoute>
+                      {page}
+                    </ProtectedRoute>
+                  } 
+                />
+              ))}
               <Route 
-                key={to} 
-                path={to} 
+                path="/token/:chainId/:tokenAddress" 
                 element={
                   <ProtectedRoute>
-                    {page}
+                    <TokenDetails />
                   </ProtectedRoute>
                 } 
               />
-            ))}
-            <Route 
-              path="/token/:chainId/:tokenAddress" 
-              element={
-                <ProtectedRoute>
-                  <TokenDetails />
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </div>
+            </Routes>
+          </div>
+        </SupabaseAuthProvider>
         <BottomNavbar />
       </BrowserRouter>
     </TooltipProvider>
