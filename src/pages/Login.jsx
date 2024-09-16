@@ -22,7 +22,12 @@ const Login = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message === 'Invalid login credentials') {
+          throw new Error('Invalid email or password. Please try again.');
+        }
+        throw error;
+      }
 
       // Get device information
       const deviceInfo = {
