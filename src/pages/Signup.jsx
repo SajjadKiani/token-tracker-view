@@ -9,18 +9,44 @@ import Header from '../components/Header';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    if (cooldown > 0) {
+      toast({
+        title: "Signup Cooldown",
+        description: `Please wait ${cooldown} seconds before trying again.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.status === 429) {
+          setCooldown(60); // Set a 60-second cooldown
+          const interval = setInterval(() => {
+            setCooldown((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+          throw new Error("Email rate limit exceeded. Please try again later.");
+        }
+        throw error;
+      }
 
       toast({
         title: "Signup Successful",
@@ -33,6 +59,8 @@ const Signup = () => {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,6 +76,7 @@ const Signup = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoading || cooldown > 0}
           />
           <Input
             type="password"
@@ -55,8 +84,11 @@ const Signup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isLoading || cooldown > 0}
           />
-          <Button type="submit" className="w-full">Sign Up</Button>
+          <Button type="submit" className="w-full" disabled={isLoading || cooldown > 0}>
+            {isLoading ? 'Signing up...' : cooldown > 0 ? `Try again in ${cooldown}s` : 'Sign Up'}
+          </Button>
         </form>
         <p className="mt-4 text-center">
           Already have an account?{' '}
