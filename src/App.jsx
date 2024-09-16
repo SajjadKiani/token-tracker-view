@@ -1,14 +1,25 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { navItems } from "./nav-items";
 import BottomNavbar from "./components/BottomNavbar";
 import TokenDetails from "./pages/TokenDetails";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import { useSupabaseAuth } from "./integrations/supabase";
 
 const queryClient = new QueryClient();
+
+const ProtectedRoute = ({ children }) => {
+  const { session } = useSupabaseAuth();
+  
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -17,12 +28,27 @@ const App = () => (
       <BrowserRouter>
         <div className="pb-16">
           <Routes>
-            {navItems.map(({ to, page }) => (
-              <Route key={to} path={to} element={page} />
-            ))}
-            <Route path="/token/:chainId/:tokenAddress" element={<TokenDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            {navItems.map(({ to, page }) => (
+              <Route 
+                key={to} 
+                path={to} 
+                element={
+                  <ProtectedRoute>
+                    {page}
+                  </ProtectedRoute>
+                } 
+              />
+            ))}
+            <Route 
+              path="/token/:chainId/:tokenAddress" 
+              element={
+                <ProtectedRoute>
+                  <TokenDetails />
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </div>
         <BottomNavbar />
