@@ -13,11 +13,16 @@ import {
 } from "@/components/ui/select"
 
 const fetchData = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
   }
-  return response.json();
 };
 
 const Index = () => {

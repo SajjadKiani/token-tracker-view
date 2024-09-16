@@ -13,17 +13,32 @@ const CryptoCard = ({ crypto }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 relative">
       <div className='w-100'>
-        {crypto.header &&
-          <img src={crypto.header} alt='header' />
-        }
+        {crypto.header && (
+          <img 
+            src={crypto.header} 
+            alt='header' 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://via.placeholder.com/300x100?text=Header+Image+Not+Available';
+            }}
+          />
+        )}
       </div>
       <div className="flex justify-between mt-5 items-center mb-2">
         {crypto.icon && (
-          <img src={crypto.icon} alt={crypto.header} className="w-10 h-10 mr-2 rounded-full" />
+          <img 
+            src={crypto.icon} 
+            alt={crypto.header} 
+            className="w-10 h-10 mr-2 rounded-full"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://via.placeholder.com/40?text=Icon';
+            }}
+          />
         )}
         <button
           onClick={() => toggleBookmark(crypto)}
-          className=" text-gray-500 hover:text-yellow-500 transition-colors"
+          className="text-gray-500 hover:text-yellow-500 transition-colors"
         >
           <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
         </button>
