@@ -14,7 +14,7 @@ const queryClient = new QueryClient();
 const ProtectedRoute = ({ children }) => {
   const { session } = useSupabaseAuth();
   
-  if (!session) {
+  if (session === undefined) {
     return <Navigate to="/login" replace />;
   }
 

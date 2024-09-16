@@ -22,8 +22,8 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   useEffect(() => {
     const getSession = async () => {
       setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session?.access_token);
       setLoading(false);
     };
 
@@ -61,7 +61,9 @@ export const useSupabaseAuth = () => {
 export const SupabaseAuthUI = () => (
   <Auth
     supabaseClient={supabase}
-    appearance={{ theme: ThemeSupa }}
+    appearance={{ 
+      theme: ThemeSupa,
+    }}
     theme="default"
     providers={[]}
   />

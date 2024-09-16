@@ -1,13 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { Loader } from 'lucide-react';
 import SearchResultCard from '../components/SearchResultCard';
 import Header from '../components/Header';
 import { Input } from '@/components/ui/input';
+import { useSearchParams } from 'react-router-dom';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const fetchSearchResults = async (query) => {
     if (!query) return { pairs: [] };
@@ -33,6 +35,13 @@ const Search = () => {
     setSearchTerm(e.target.value);
   };
 
+  useEffect(() => {
+    const params = searchParams.get('q')
+
+    if (params) 
+      setSearchTerm(params)
+  },[])
+
   const renderSearchResults = () => {
     if (isLoading) return <Loader className="animate-spin text-primary w-8 h-8 mx-auto mt-4" />;
     if (error) return <p className="text-red-500 mt-4">Error: {error.message}</p>;
@@ -55,7 +64,7 @@ const Search = () => {
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          placeholder="Search for tokens (e.g., SOL/USDT)"
+          placeholder="Search for tokens (e.g., SOL/USDT, Token Contract)"
         />
         {renderSearchResults()}
       </div>

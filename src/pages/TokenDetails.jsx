@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Copy, Loader } from 'lucide-react';
+import { Copy, Loader, Search } from 'lucide-react';
 import Header from '../components/Header';
 import moment from 'moment';
 import { Button } from '@/components/ui/button';
 
 const TokenDetails = () => {
   const { chainId, tokenAddress } = useParams();
-  const [btnText, setBtnText] = useState('Copy Token Address')
+  const [btnText, setBtnText] = useState('Copy Address')
 
   const fetchTokenDetails = async () => {
     const response = await fetch(`https://api.dexscreener.com/orders/v1/${chainId}/${tokenAddress}`);
@@ -41,12 +41,21 @@ const TokenDetails = () => {
         <p><strong>Type:</strong> {tokenProfile?.type}</p>
         <p><strong>Status:</strong> {tokenProfile?.status}</p>
         <p><strong>Payment Timestamp:</strong> {moment(tokenProfile?.paymentTimestamp).fromNow()} </p>
-        <Button className='mt-5 flex items-center gap-1'
+        <div className='flex gap-3 mt-5'>
+        <Button className='flex items-center gap-1'
           onClick={handleCopy}
         >
           <Copy />
           {btnText}
         </Button>
+
+        <Button asChild>
+          <Link to={'/search?q=' + tokenAddress} className='flex items-center gap-1'>
+            <Search />
+            Search
+          </Link>
+        </Button>
+        </div>
       </div>
     );
   };
