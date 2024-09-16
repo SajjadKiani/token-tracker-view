@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Copy, Loader } from 'lucide-react';
@@ -8,7 +8,35 @@ import { Button } from '@/components/ui/button';
 
 const TokenDetails = () => {
   const { chainId, tokenAddress } = useParams();
-  const [btnText, setBtnText] = useState('Copy Token Address')
+  const [btnText, setBtnText] = useState('Copy Token Address');
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/tv.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      new window.TradingView.widget({
+        width: '100%',
+        height: 400,
+        symbol: 'BINANCE:BTCUSDT', // Default symbol, we'll update this later
+        interval: 'D',
+        timezone: 'Etc/UTC',
+        theme: 'dark',
+        style: '1',
+        locale: 'en',
+        toolbar_bg: '#f1f3f6',
+        enable_publishing: false,
+        allow_symbol_change: true,
+        container_id: 'tradingview_chart'
+      });
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const fetchTokenDetails = async () => {
     const response = await fetch(`https://api.dexscreener.com/orders/v1/${chainId}/${tokenAddress}`);
@@ -47,6 +75,7 @@ const TokenDetails = () => {
           <Copy />
           {btnText}
         </Button>
+        <div id="tradingview_chart" className="mt-6"></div>
       </div>
     );
   };
