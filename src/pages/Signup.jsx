@@ -11,6 +11,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -29,11 +30,14 @@ const Signup = () => {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
 
       if (error) {
         if (error.status === 429) {
-          setCooldown(60); // Set a 60-second cooldown
+          setCooldown(60);
           const interval = setInterval(() => {
             setCooldown((prev) => {
               if (prev <= 1) {
@@ -48,14 +52,57 @@ const Signup = () => {
         throw error;
       }
 
+      setEmailSent(true);
       toast({
         title: "Signup Successful",
-        description: "Please check your email to verify your account.",
+        description: "Please check your email to confirm your account.",
       });
-      navigate('/login');
     } catch (error) {
       toast({
         title: "Signup Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resendConfirmationEmail = async () => {
+    if (cooldown > 0) {
+      toast({
+        title: "Resend Cooldown",
+        description: `Please wait ${cooldown} seconds before trying again.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Confirmation Email Resent",
+        description: "Please check your email for the confirmation link.",
+      });
+      setCooldown(60);
+      const interval = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Resend Failed",
         description: error.message,
         variant: "destructive",
       });
@@ -69,27 +116,36 @@ const Signup = () => {
       <Header />
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
         <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-        <form onSubmit={handleSignup} className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={isLoading || cooldown > 0}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={isLoading || cooldown > 0}
-          />
-          <Button type="submit" className="w-full" disabled={isLoading || cooldown > 0}>
-            {isLoading ? 'Signing up...' : cooldown > 0 ? `Try again in ${cooldown}s` : 'Sign Up'}
-          </Button>
-        </form>
+        {!emailSent ? (
+          <form onSubmit={handleSignup} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isLoading || cooldown > 0}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isLoading || cooldown > 0}
+            />
+            <Button type="submit" className="w-full" disabled={isLoading || cooldown > 0}>
+              {isLoading ? 'Signing up...' : cooldown > 0 ? `Try again in ${cooldown}s` : 'Sign Up'}
+            </Button>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <p>A confirmation email has been sent to {email}. Please check your inbox and click the confirmation link to complete your registration.</p>
+            <Button onClick={resendConfirmationEmail} disabled={isLoading || cooldown > 0} className="w-full">
+              {isLoading ? 'Resending...' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend Confirmation Email'}
+            </Button>
+          </div>
+        )}
         <p className="mt-4 text-center">
           Already have an account?{' '}
           <Button variant="link" onClick={() => navigate('/login')}>
