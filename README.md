@@ -1,72 +1,82 @@
-# Welcome to your GPT Engineer project
+# Token Tracker View
 
-## Project info
+A web-based application to track new tokens.
 
-**Project**: token-tracker-view
+## Project Overview
 
-**URL**: https://run.gptengineer.app/projects/2dff0d0a-24d3-45cf-992b-512241e746cd/improve
+Token Tracker View is a simple and intuitive tool that allows users to view new tokens in Chains. The app provides a clean interface where users can input an token address and receive a list of all associated tokens along with their respective balances.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Token Tracking:** Retrieves and displays the new tokens.
+- **Simple Interface:** Clean and user-friendly interface for quick balance checks.
+- **Fast and Efficient:** Leveraging the power of Ethereum and token standards to provide quick responses.
+- **Deployed on Vercel:** Hosted on Vercel for fast and reliable deployment.
 
-**Use GPT Engineer**
+## Getting Started
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/2dff0d0a-24d3-45cf-992b-512241e746cd/improve) and start prompting.
+Follow these steps to get a local copy of the project up and running:
 
-Changes made via gptengineer.app will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+You need to have the following installed on your local machine:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in the GPT Engineer UI.
+- Node.js (v14 or higher)
+- npm (v6 or higher) or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. Clone the repository:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+    ```bash
+    git clone https://github.com/your-username/token-tracker-view.git
+    cd token-tracker-view
+    ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install the dependencies:
 
-# Step 3: Install the necessary dependencies.
-npm i
+    ```bash
+    npm install
+    ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+3. Run the development server:
 
-**Edit a file directly in GitHub**
+    ```bash
+    npm run dev
+    ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-**Use GitHub Codespaces**
+### Deployment
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+This app is deployed on Vercel. To deploy it yourself:
 
-## What technologies are used for this project?
+1. Push your code to a GitHub repository.
+2. Connect the repository to your Vercel account.
+3. Deploy the app by following Vercel's deployment process.
 
-This project is built with .
+## Usage
 
-- Vite
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Open the app in your browser.
+2. Enter a valid Ethereum address into the input field.
+3. The app will display a list of ERC20 tokens and their balances for the given address.
 
-## How can I deploy this project?
+## Future Enhancements
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app.
+- **Historical Data:** Add the ability to view historical balances for any given token.
+- **Network Support:** Include support for other networks such as Binance Smart Chain or Polygon.
+- **User Wallet Integration:** Allow users to connect their wallet to view their balances directly.
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/2dff0d0a-24d3-45cf-992b-512241e746cd/improve) and click on Share -> Publish.
+## Contributing
 
-## I want to use a custom domain - is that possible?
+Contributions are welcome! To contribute:
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+1. Fork the project.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
