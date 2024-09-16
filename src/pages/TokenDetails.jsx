@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Copy, Loader } from 'lucide-react';
@@ -9,32 +9,51 @@ import { Button } from '@/components/ui/button';
 const TokenDetails = () => {
   const { chainId, tokenAddress } = useParams();
   const [btnText, setBtnText] = useState('Copy Token Address');
+  const chartContainerRef = useRef(null);
+  const [chartError, setChartError] = useState(null);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/tv.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
-      new window.TradingView.widget({
-        width: '100%',
-        height: 400,
-        symbol: 'BINANCE:BTCUSDT', // Default symbol, we'll update this later
-        interval: 'D',
-        timezone: 'Etc/UTC',
-        theme: 'dark',
-        style: '1',
-        locale: 'en',
-        toolbar_bg: '#f1f3f6',
-        enable_publishing: false,
-        allow_symbol_change: true,
-        container_id: 'tradingview_chart'
+    const loadTradingViewScript = () => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/tv.js';
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
       });
     };
 
+    const initChart = () => {
+      if (typeof TradingView !== 'undefined' && chartContainerRef.current) {
+        new TradingView.widget({
+          width: '100%',
+          height: 400,
+          symbol: 'BINANCE:BTCUSDT', // Default symbol, we'll update this later
+          interval: 'D',
+          timezone: 'Etc/UTC',
+          theme: 'dark',
+          style: '1',
+          locale: 'en',
+          toolbar_bg: '#f1f3f6',
+          enable_publishing: false,
+          allow_symbol_change: true,
+          container_id: chartContainerRef.current.id
+        });
+      } else {
+        setChartError('Failed to load TradingView chart');
+      }
+    };
+
+    loadTradingViewScript()
+      .then(initChart)
+      .catch((error) => {
+        console.error('Error loading TradingView script:', error);
+        setChartError('Failed to load TradingView chart');
+      });
+
     return () => {
-      document.body.removeChild(script);
+      // Cleanup if needed
     };
   }, []);
 
@@ -52,9 +71,10 @@ const TokenDetails = () => {
   });
 
   const handleCopy = () => {
-    setBtnText('Copied!')
-    navigator.clipboard.writeText(tokenAddress)
-  }
+    setBtnText('Copied!');
+    navigator.clipboard.writeText(tokenAddress);
+    setTimeout(() => setBtnText('Copy Token Address'), 2000);
+  };
 
   const renderContent = () => {
     if (isLoading) return <div className="flex justify-center items-center h-40"><Loader className="animate-spin text-primary w-8 h-8" /></div>;
@@ -69,13 +89,17 @@ const TokenDetails = () => {
         <p><strong>Type:</strong> {tokenProfile?.type}</p>
         <p><strong>Status:</strong> {tokenProfile?.status}</p>
         <p><strong>Payment Timestamp:</strong> {moment(tokenProfile?.paymentTimestamp).fromNow()} </p>
-        <Button className='mt-5 flex items-center gap-1'
-          onClick={handleCopy}
-        >
+        <Button className='mt-5 flex items-center gap-1' onClick={handleCopy}>
           <Copy />
           {btnText}
         </Button>
-        <div id="tradingview_chart" className="mt-6"></div>
+        <div className="mt-6">
+          {chartError ? (
+            <div className="text-red-500">{chartError}</div>
+          ) : (
+            <div id="tradingview_chart" ref={chartContainerRef}></div>
+          )}
+        </div>
       </div>
     );
   };
