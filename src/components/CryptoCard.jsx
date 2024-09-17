@@ -2,11 +2,9 @@ import React from 'react';
 import { BookmarkIcon } from 'lucide-react';
 import { useBookmark } from '../hooks/useBookmark';
 import { Link } from 'react-router-dom';
-import { useSupabaseAuth } from '../integrations/supabase';
 
 const CryptoCard = ({ crypto }) => {
   const { isBookmarked, toggleBookmark } = useBookmark(crypto);
-  const { session } = useSupabaseAuth();
 
   if (!crypto) {
     return null;
@@ -38,14 +36,12 @@ const CryptoCard = ({ crypto }) => {
             }}
           />
         )}
-        {session && (
-          <button
-            onClick={() => toggleBookmark(crypto)}
-            className="text-gray-500 hover:text-yellow-500 transition-colors"
-          >
-            <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
-          </button>
-        )}
+        <button
+          onClick={() => toggleBookmark(crypto)}
+          className="text-gray-500 hover:text-yellow-500 transition-colors"
+        >
+          <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
+        </button>
       </div>
       {crypto.description && (
         <p className="text-sm text-gray-600 mb-2 line-clamp-3">{crypto.description}</p>
