@@ -14,11 +14,39 @@ const queryClient = new QueryClient();
 const ProtectedRoute = ({ children }) => {
   const { session } = useSupabaseAuth();
   
-  if (session === undefined) {
+  if (!session) {
     return <Navigate to="/login" replace />;
   }
 
   return children;
+};
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      {navItems.map(({ to, page }) => (
+        <Route 
+          key={to} 
+          path={to} 
+          element={
+            <ProtectedRoute>
+              {page}
+            </ProtectedRoute>
+          } 
+        />
+      ))}
+      <Route 
+        path="/token/:chainId/:tokenAddress" 
+        element={
+          <ProtectedRoute>
+            <TokenDetails />
+          </ProtectedRoute>
+        } 
+      />
+    </Routes>
+  );
 };
 
 const App = () => (
@@ -28,32 +56,10 @@ const App = () => (
       <BrowserRouter>
         <SupabaseAuthProvider>
           <div className="pb-16">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              {navItems.map(({ to, page }) => (
-                <Route 
-                  key={to} 
-                  path={to} 
-                  element={
-                    <ProtectedRoute>
-                      {page}
-                    </ProtectedRoute>
-                  } 
-                />
-              ))}
-              <Route 
-                path="/token/:chainId/:tokenAddress" 
-                element={
-                  <ProtectedRoute>
-                    <TokenDetails />
-                  </ProtectedRoute>
-                } 
-              />
-            </Routes>
+            <AppRoutes />
           </div>
+          <BottomNavbar />
         </SupabaseAuthProvider>
-        <BottomNavbar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
