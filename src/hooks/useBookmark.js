@@ -12,19 +12,23 @@ export const useBookmark = (crypto) => {
     const checkBookmarkStatus = async () => {
       if (!session?.user) return;
 
-      const { data, error } = await supabase
-        .from('UserBookmarks')
-        .select('bookmarks')
-        .eq('user_id', session.user.id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('UserBookmarks')
+          .select('bookmarks')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
 
-      if (error) {
-        console.error('Error fetching bookmarks:', error);
-        return;
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error fetching bookmarks:', error);
+          return;
+        }
+
+        const bookmarks = data?.bookmarks || [];
+        setIsBookmarked(bookmarks.some(bookmark => bookmark.tokenAddress === crypto.tokenAddress));
+      } catch (error) {
+        console.error('Error in checkBookmarkStatus:', error);
       }
-
-      const bookmarks = data?.bookmarks || [];
-      setIsBookmarked(bookmarks.some(bookmark => bookmark.tokenAddress === crypto.tokenAddress));
     };
 
     checkBookmarkStatus();
@@ -45,7 +49,7 @@ export const useBookmark = (crypto) => {
         .from('UserBookmarks')
         .select('bookmarks')
         .eq('user_id', session.user.id)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         throw error;
