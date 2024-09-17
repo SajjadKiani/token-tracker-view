@@ -5,12 +5,16 @@ import Header from '../components/Header';
 import { supabase } from '../integrations/supabase/supabase';
 import { useSupabaseAuth } from '../integrations/supabase';
 import { Loader } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
 
 const Bookmark = () => {
   const { session } = useSupabaseAuth();
+  const { toast } = useToast();
 
   const fetchBookmarks = async () => {
-    if (!session) return [];
+    if (!session?.user?.id) {
+      throw new Error('User not authenticated');
+    }
     const { data, error } = await supabase
       .from('bookmarks')
       .select('*')
@@ -21,10 +25,28 @@ const Bookmark = () => {
   };
 
   const { data: bookmarks, isLoading, error } = useQuery({
-    queryKey: ['bookmarks', session?.user.id],
+    queryKey: ['bookmarks', session?.user?.id],
     queryFn: fetchBookmarks,
-    enabled: !!session
+    enabled: !!session?.user?.id,
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: `Failed to fetch bookmarks: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   });
+
+  if (!session) {
+    return (
+      <div className="bg-primary">
+        <Header />
+        <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
+          <p>Please log in to view your bookmarks.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
