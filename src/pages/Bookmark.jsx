@@ -1,36 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import CryptoCard from '../components/CryptoCard';
 import Header from '../components/Header';
+import { useSupabaseAuth } from '../integrations/supabase';
+import { supabase } from '../integrations/supabase/supabase';
+import { useQuery } from '@tanstack/react-query';
+import { Loader } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
 
 const Bookmark = () => {
-  const [bookmarks, setBookmarks] = useState([]);
+  const { session } = useSupabaseAuth();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const loadBookmarks = () => {
-      const savedBookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-      setBookmarks(savedBookmarks);
-    };
+  const fetchBookmarks = async () => {
+    if (!session?.user?.id) {
+      return [];
+    }
+    const { data, error } = await supabase
+      .from('UserBookmarks')
+      .select('bookmarks')
+      .eq('user_id', session.user.id)
+      .single();
 
-    loadBookmarks();
-    window.addEventListener('storage', loadBookmarks);
+    if (error) throw error;
+    return data?.bookmarks || [];
+  };
 
-    return () => {
-      window.removeEventListener('storage', loadBookmarks);
-    };
-  }, []);
+  const { data: bookmarks, isLoading, error } = useQuery({
+    queryKey: ['bookmarks', session?.user?.id],
+    queryFn: fetchBookmarks,
+    enabled: !!session?.user?.id,
+  });
+
+  if (error) {
+    toast({
+      title: "Error",
+      description: "Failed to fetch bookmarks. Please try again.",
+      variant: "destructive",
+    });
+  }
 
   return (
     <div className="bg-primary">
       <Header />
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
-        {bookmarks.length === 0 ? (
-          <p>You haven't bookmarked any cryptocurrencies yet.</p>
-        ) : (
+        {!session?.user ? (
+          <p>Please log in to view your bookmarks.</p>
+        ) : isLoading ? (
+          <div className="flex justify-center items-center h-40">
+            <Loader className="animate-spin text-primary w-8 h-8" />
+          </div>
+        ) : bookmarks && bookmarks.length > 0 ? (
           <div className="space-y-4">
             {bookmarks.map((crypto, index) => (
               <CryptoCard key={index} crypto={crypto} />
             ))}
           </div>
+        ) : (
+          <p>You haven't bookmarked any cryptocurrencies yet.</p>
         )}
       </div>
     </div>
