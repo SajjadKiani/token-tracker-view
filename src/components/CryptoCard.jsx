@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookmarkIcon } from 'lucide-react';
+import { BookmarkIcon, ExternalLinkIcon } from 'lucide-react';
 import { useBookmark } from '../hooks/useBookmark';
 import { Link } from 'react-router-dom';
 import { useSupabaseAuth } from '../integrations/supabase';
@@ -19,6 +19,7 @@ const CryptoCard = ({ crypto }) => {
           <img 
             src={crypto.header} 
             alt='header' 
+            className="w-full h-32 object-cover rounded-t-lg"
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = 'https://via.placeholder.com/300x100?text=Header+Image+Not+Available';
@@ -27,25 +28,26 @@ const CryptoCard = ({ crypto }) => {
         )}
       </div>
       <div className="flex justify-between mt-5 items-center mb-2">
-        {crypto.icon && (
-          <img 
-            src={crypto.icon} 
-            alt={crypto.header} 
-            className="w-10 h-10 mr-2 rounded-full"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = 'https://via.placeholder.com/40?text=Icon';
-            }}
-          />
-        )}
-        {session?.user && (
-          <button
-            onClick={() => toggleBookmark(crypto)}
-            className="text-gray-500 hover:text-yellow-500 transition-colors"
-          >
-            <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
-          </button>
-        )}
+        <div className="flex items-center">
+          {crypto.icon && (
+            <img 
+              src={crypto.icon} 
+              alt={crypto.header} 
+              className="w-10 h-10 mr-2 rounded-full"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://via.placeholder.com/40?text=Icon';
+              }}
+            />
+          )}
+          <h2 className="text-lg font-semibold">{crypto.tokenAddress ? crypto.tokenAddress.slice(0, 6) + '...' + crypto.tokenAddress.slice(-4) : 'Unknown'}</h2>
+        </div>
+        <button
+          onClick={() => toggleBookmark(crypto)}
+          className="text-gray-500 hover:text-yellow-500 transition-colors"
+        >
+          <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
+        </button>
       </div>
       {crypto.description && (
         <p className="text-sm text-gray-600 mb-2 line-clamp-3">{crypto.description}</p>
@@ -72,11 +74,12 @@ const CryptoCard = ({ crypto }) => {
             <a
               key={index}
               href={link.url}
-              className="text-blue-500 text-sm mr-2 hover:underline"
+              className="text-blue-500 text-sm mr-2 hover:underline flex items-center"
               target="_blank"
               rel="noopener noreferrer"
             >
               {link.label}
+              <ExternalLinkIcon className="h-4 w-4 ml-1" />
             </a>
           ))}
         </div>
