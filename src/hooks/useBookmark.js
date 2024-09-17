@@ -1,26 +1,64 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '../integrations/supabase/supabase';
+import { useSupabaseAuth } from '../integrations/supabase';
 
 export const useBookmark = (crypto) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const { session } = useSupabaseAuth();
 
   useEffect(() => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-    setIsBookmarked(bookmarks.some(bookmark => bookmark.tokenAddress === crypto.tokenAddress));
-  }, [crypto.tokenAddress]);
+    const checkBookmarkStatus = async () => {
+      if (!session || !crypto.tokenAddress) return;
 
-  const toggleBookmark = (crypto) => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-    const index = bookmarks.findIndex(bookmark => bookmark.tokenAddress === crypto.tokenAddress);
+      const { data, error } = await supabase
+        .from('bookmarks')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .eq('token_address', crypto.tokenAddress)
+        .single();
 
-    if (index === -1) {
-      bookmarks.push(crypto);
-      setIsBookmarked(true);
+      if (error) {
+        console.error('Error checking bookmark status:', error);
+        return;
+      }
+
+      setIsBookmarked(!!data);
+    };
+
+    checkBookmarkStatus();
+  }, [crypto.tokenAddress, session]);
+
+  const toggleBookmark = async (crypto) => {
+    if (!session) return;
+
+    if (isBookmarked) {
+      const { error } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('user_id', session.user.id)
+        .eq('token_address', crypto.tokenAddress);
+
+      if (error) {
+        console.error('Error removing bookmark:', error);
+        return;
+      }
     } else {
-      bookmarks.splice(index, 1);
-      setIsBookmarked(false);
+      const { error } = await supabase
+        .from('bookmarks')
+        .insert({
+          user_id: session.user.id,
+          token_address: crypto.tokenAddress,
+          chain_id: crypto.chainId,
+          token_data: crypto
+        });
+
+      if (error) {
+        console.error('Error adding bookmark:', error);
+        return;
+      }
     }
 
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    setIsBookmarked(!isBookmarked);
   };
 
   return { isBookmarked, toggleBookmark };
