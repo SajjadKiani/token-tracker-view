@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Loader } from 'lucide-react';
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TonConnectButton, useTonWallet, useTonConnect } from '@tonconnect/ui-react';
+import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react';
 import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
 
 const Wallet = () => {
@@ -13,7 +13,6 @@ const Wallet = () => {
   const [provider, setProvider] = useState(null);
   const [chainType, setChainType] = useState(null);
   const tonWallet = useTonWallet();
-  const { connected } = useTonConnect();
 
   useEffect(() => {
     if (window.ethereum) {
@@ -53,7 +52,7 @@ const Wallet = () => {
   };
 
   const fetchAssets = async () => {
-    if (!account && !connected) return [];
+    if (!account && !tonWallet) return [];
     let assets = [];
 
     if (chainType === 'ethereum') {
@@ -76,7 +75,7 @@ const Wallet = () => {
       });
     }
 
-    if (connected) {
+    if (tonWallet) {
       const tonBalance = await getTonBalance();
       assets.push({
         symbol: 'TON',
@@ -88,9 +87,9 @@ const Wallet = () => {
   };
 
   const { data: assets, isLoading, error } = useQuery({
-    queryKey: ['assets', account, chainType, connected],
+    queryKey: ['assets', account, chainType, tonWallet?.account.address],
     queryFn: fetchAssets,
-    enabled: !!account || connected,
+    enabled: !!account || !!tonWallet,
   });
 
   return (
@@ -98,7 +97,7 @@ const Wallet = () => {
       <Header />
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
         <h2 className="text-2xl font-bold mb-4">Wallet</h2>
-        {!account && !connected ? (
+        {!account && !tonWallet ? (
           <div className="space-y-2">
             <Button onClick={() => connectWallet('ethereum')}>Connect Ethereum Wallet</Button>
             <Button onClick={() => connectWallet('base')}>Connect Base Wallet</Button>
@@ -108,7 +107,7 @@ const Wallet = () => {
         ) : (
           <div>
             {account && <p className="mb-4">Connected: {account}</p>}
-            {connected && <p className="mb-4">TON Wallet Connected: {tonWallet?.account.address}</p>}
+            {tonWallet && <p className="mb-4">TON Wallet Connected: {tonWallet.account.address}</p>}
             <h3 className="text-xl font-semibold mb-2">Assets</h3>
             {isLoading ? (
               <Loader className="animate-spin text-primary w-8 h-8" />
