@@ -8,6 +8,7 @@ import TokenDetails from "./pages/TokenDetails";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { SupabaseAuthProvider, useSupabaseAuth } from "./integrations/supabase";
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
 
 const queryClient = new QueryClient();
 
@@ -53,14 +54,16 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <BrowserRouter>
-        <SupabaseAuthProvider>
-          <div className="pb-16">
-            <AppRoutes />
-          </div>
-          <BottomNavbar />
-        </SupabaseAuthProvider>
-      </BrowserRouter>
+      <TonConnectUIProvider manifestUrl="https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json">
+        <BrowserRouter>
+          <SupabaseAuthProvider>
+            <div className="pb-16">
+              <AppRoutes />
+            </div>
+            <BottomNavbar />
+          </SupabaseAuthProvider>
+        </BrowserRouter>
+      </TonConnectUIProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
