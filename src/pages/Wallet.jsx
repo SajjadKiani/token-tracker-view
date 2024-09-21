@@ -4,10 +4,14 @@ import Header from '../components/Header';
 import { Button } from '@/components/ui/button';
 import { Loader } from 'lucide-react';
 import { ethers } from 'ethers';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { TonClient } from '@ton/ton';
+import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
 
 const Wallet = () => {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [chainType, setChainType] = useState(null);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -16,34 +20,82 @@ const Wallet = () => {
     }
   }, []);
 
-  const connectWallet = async () => {
-    if (provider) {
-      try {
-        await provider.send("eth_requestAccounts", []);
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        setAccount(address);
-      } catch (error) {
-        console.error("Failed to connect wallet:", error);
+  const connectWallet = async (type) => {
+    setChainType(type);
+    if (type === 'ethereum' || type === 'base') {
+      if (provider) {
+        try {
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          setAccount(address);
+        } catch (error) {
+          console.error("Failed to connect wallet:", error);
+        }
+      } else {
+        console.error("Ethereum provider not found");
       }
-    } else {
-      console.error("Ethereum provider not found");
+    } else if (type === 'solana') {
+      if (window.solana) {
+        try {
+          await window.solana.connect();
+          setAccount(window.solana.publicKey.toString());
+        } catch (error) {
+          console.error("Failed to connect Solana wallet:", error);
+        }
+      } else {
+        console.error("Solana wallet not found");
+      }
+    } else if (type === 'ton') {
+      if (window.ton) {
+        try {
+          await window.ton.send('ton_requestAccounts');
+          const accounts = await window.ton.send('ton_requestAccounts');
+          setAccount(accounts[0]);
+        } catch (error) {
+          console.error("Failed to connect TON wallet:", error);
+        }
+      } else {
+        console.error("TON wallet not found");
+      }
     }
   };
 
   const fetchAssets = async () => {
     if (!account) return [];
-    const balance = await provider.getBalance(account);
-    return [
-      {
+    let assets = [];
+
+    if (chainType === 'ethereum') {
+      const balance = await provider.getBalance(account);
+      assets.push({
         symbol: 'ETH',
         balance: ethers.utils.formatEther(balance),
-      },
-    ];
+      });
+    } else if (chainType === 'base') {
+      const balance = await getBaseBalance(account);
+      assets.push({
+        symbol: 'ETH (Base)',
+        balance: balance,
+      });
+    } else if (chainType === 'solana') {
+      const balance = await getSolanaBalance(account);
+      assets.push({
+        symbol: 'SOL',
+        balance: balance,
+      });
+    } else if (chainType === 'ton') {
+      const balance = await getTonBalance(account);
+      assets.push({
+        symbol: 'TON',
+        balance: balance,
+      });
+    }
+
+    return assets;
   };
 
   const { data: assets, isLoading, error } = useQuery({
-    queryKey: ['assets', account],
+    queryKey: ['assets', account, chainType],
     queryFn: fetchAssets,
     enabled: !!account,
   });
@@ -54,7 +106,12 @@ const Wallet = () => {
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
         <h2 className="text-2xl font-bold mb-4">Wallet</h2>
         {!account ? (
-          <Button onClick={connectWallet}>Connect Wallet</Button>
+          <div className="space-y-2">
+            <Button onClick={() => connectWallet('ethereum')}>Connect Ethereum Wallet</Button>
+            <Button onClick={() => connectWallet('base')}>Connect Base Wallet</Button>
+            <Button onClick={() => connectWallet('solana')}>Connect Solana Wallet</Button>
+            <Button onClick={() => connectWallet('ton')}>Connect TON Wallet</Button>
+          </div>
         ) : (
           <div>
             <p className="mb-4">Connected: {account}</p>
