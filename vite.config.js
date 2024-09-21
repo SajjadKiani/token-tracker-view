@@ -19,9 +19,11 @@ export default defineConfig({
       devOptions: {
         enabled: true
       },
+      manifestFilename: 'manifest.json',
+      workbox: {
+        maximumFileSizeToCacheInBytes: 30000000
+      },
       manifest: {
-        "url": process.env.NODE_ENV === 'production' ? 'https://token-tracker-view.vercel.app' : 'http://localhost:8080',
-        "iconUrl": process.env.NODE_ENV === "production" ? "https://token-tracker-view.vercel.app/icon-144.png" : "http://localhost:8080/icon-144.png",
         "name": "Crypto Tracker",
         "short_name": "Crypto Tracker",
         "start_url": "/",
