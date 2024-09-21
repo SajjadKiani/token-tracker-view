@@ -6,7 +6,7 @@ import { Loader } from 'lucide-react';
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TonConnectButton, useTonWallet, useTonConnect } from '@tonconnect/ui-react';
-import { getBaseBalance, getSolanaBalance, useTonBalance } from '../utils/chainUtils';
+import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
 
 const Wallet = () => {
   const [account, setAccount] = useState(null);
@@ -14,7 +14,6 @@ const Wallet = () => {
   const [chainType, setChainType] = useState(null);
   const tonWallet = useTonWallet();
   const { connected } = useTonConnect();
-  const tonBalance = useTonBalance();
 
   useEffect(() => {
     if (window.ethereum) {
@@ -78,6 +77,7 @@ const Wallet = () => {
     }
 
     if (connected) {
+      const tonBalance = await getTonBalance();
       assets.push({
         symbol: 'TON',
         balance: tonBalance,
