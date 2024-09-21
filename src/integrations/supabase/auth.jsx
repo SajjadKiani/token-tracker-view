@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './supabase.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { Auth } from '@supabase/auth-ui-react';
@@ -23,7 +23,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     const getSession = async () => {
       setLoading(true);
       const { data } = await supabase.auth.getSession();
-      setSession(data.session?.access_token);
+      setSession(data.session);
       setLoading(false);
     };
 
@@ -36,7 +36,6 @@ export const SupabaseAuthProviderInner = ({ children }) => {
 
     return () => {
       authListener.subscription.unsubscribe();
-      setLoading(false);
     };
   }, [queryClient]);
 
@@ -44,7 +43,6 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     await supabase.auth.signOut();
     setSession(null);
     queryClient.invalidateQueries('user');
-    setLoading(false);
   };
 
   return (
@@ -55,7 +53,11 @@ export const SupabaseAuthProviderInner = ({ children }) => {
 };
 
 export const useSupabaseAuth = () => {
-  return useContext(SupabaseAuthContext);
+  const context = useContext(SupabaseAuthContext);
+  if (context === undefined) {
+    throw new Error('useSupabaseAuth must be used within a SupabaseAuthProvider');
+  }
+  return context;
 };
 
 export const SupabaseAuthUI = () => (
