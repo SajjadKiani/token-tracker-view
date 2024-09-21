@@ -54,7 +54,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <TonConnectUIProvider manifestUrl="https://token-tracker-view.vercel.app/manifest.webmanifest">
+      <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
         <BrowserRouter>
           <SupabaseAuthProvider>
             <div className="pb-16">
