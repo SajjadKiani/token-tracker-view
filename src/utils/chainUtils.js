@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { useTonConnect } from '@tonconnect/ui-react';
+import { TonConnectUI } from '@tonconnect/ui-react';
 import { Buffer } from 'buffer';
 
 // Polyfill Buffer for the browser environment
@@ -25,7 +25,11 @@ export const getSolanaBalance = async (address) => {
   }
 };
 
-export const useTonBalance = () => {
-  const { balance } = useTonConnect();
-  return balance ? balance / 1e9 : 0; // Convert nanotons to TON
+export const getTonBalance = async () => {
+  const tonConnectUI = new TonConnectUI();
+  const wallet = tonConnectUI.wallet;
+  if (wallet) {
+    return wallet.balance ? Number(wallet.balance) / 1e9 : 0; // Convert nanotons to TON
+  }
+  return 0;
 };
