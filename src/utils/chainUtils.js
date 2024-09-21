@@ -1,6 +1,12 @@
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TonClient } from '@ton/ton';
+import { Buffer } from 'buffer';
+
+// Polyfill Buffer for the browser environment
+if (typeof window !== 'undefined') {
+  window.Buffer = Buffer;
+}
 
 export const getBaseBalance = async (address) => {
   const provider = new ethers.providers.JsonRpcProvider('https://mainnet.base.org');
