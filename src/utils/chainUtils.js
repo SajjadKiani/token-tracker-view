@@ -5,7 +5,7 @@ import { Buffer } from 'buffer';
 
 // Polyfill Buffer for the browser environment
 if (typeof window !== 'undefined') {
-  window.Buffer = Buffer;
+  window.Buffer = window.Buffer || Buffer;
 }
 
 export const getBaseBalance = async (address) => {
