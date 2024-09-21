@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TonClient } from '@ton/ton';
+import { useTonConnect } from '@tonconnect/ui-react';
 import { Buffer } from 'buffer';
 
 // Polyfill Buffer for the browser environment
@@ -25,12 +25,7 @@ export const getSolanaBalance = async (address) => {
   }
 };
 
-export const getTonBalance = async (address) => {
-  if (typeof window !== 'undefined') {
-    const client = new TonClient({
-      endpoint: 'https://toncenter.com/api/v2/jsonRPC',
-    });
-    const balance = await client.getBalance(address);
-    return balance / 1e9; // Convert nanotons to TON
-  }
+export const useTonBalance = () => {
+  const { balance } = useTonConnect();
+  return balance ? balance / 1e9 : 0; // Convert nanotons to TON
 };

@@ -48,6 +48,7 @@
     "@ton/core": "^0.58.1",
     "@ton/crypto": "^3.3.0",
     "@ton/ton": "^15.0.0",
+    "@tonconnect/ui-react": "^2.0.9",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

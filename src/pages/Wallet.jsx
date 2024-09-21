@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Loader } from 'lucide-react';
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TonClient } from '@ton/ton';
-import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
+import { TonConnectButton, useTonWallet, useTonConnect } from '@tonconnect/ui-react';
+import { getBaseBalance, getSolanaBalance, useTonBalance } from '../utils/chainUtils';
 
 const Wallet = () => {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [chainType, setChainType] = useState(null);
+  const tonWallet = useTonWallet();
+  const { connected } = useTonConnect();
+  const tonBalance = useTonBalance();
 
   useEffect(() => {
     if (window.ethereum) {
@@ -46,23 +49,12 @@ const Wallet = () => {
       } else {
         console.error("Solana wallet not found");
       }
-    } else if (type === 'ton') {
-      if (window.ton) {
-        try {
-          await window.ton.send('ton_requestAccounts');
-          const accounts = await window.ton.send('ton_requestAccounts');
-          setAccount(accounts[0]);
-        } catch (error) {
-          console.error("Failed to connect TON wallet:", error);
-        }
-      } else {
-        console.error("TON wallet not found");
-      }
     }
+    // TON connection is handled by TonConnectButton
   };
 
   const fetchAssets = async () => {
-    if (!account) return [];
+    if (!account && !connected) return [];
     let assets = [];
 
     if (chainType === 'ethereum') {
@@ -83,11 +75,12 @@ const Wallet = () => {
         symbol: 'SOL',
         balance: balance,
       });
-    } else if (chainType === 'ton') {
-      const balance = await getTonBalance(account);
+    }
+
+    if (connected) {
       assets.push({
         symbol: 'TON',
-        balance: balance,
+        balance: tonBalance,
       });
     }
 
@@ -95,9 +88,9 @@ const Wallet = () => {
   };
 
   const { data: assets, isLoading, error } = useQuery({
-    queryKey: ['assets', account, chainType],
+    queryKey: ['assets', account, chainType, connected],
     queryFn: fetchAssets,
-    enabled: !!account,
+    enabled: !!account || connected,
   });
 
   return (
@@ -105,16 +98,17 @@ const Wallet = () => {
       <Header />
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
         <h2 className="text-2xl font-bold mb-4">Wallet</h2>
-        {!account ? (
+        {!account && !connected ? (
           <div className="space-y-2">
             <Button onClick={() => connectWallet('ethereum')}>Connect Ethereum Wallet</Button>
             <Button onClick={() => connectWallet('base')}>Connect Base Wallet</Button>
             <Button onClick={() => connectWallet('solana')}>Connect Solana Wallet</Button>
-            <Button onClick={() => connectWallet('ton')}>Connect TON Wallet</Button>
+            <TonConnectButton />
           </div>
         ) : (
           <div>
-            <p className="mb-4">Connected: {account}</p>
+            {account && <p className="mb-4">Connected: {account}</p>}
+            {connected && <p className="mb-4">TON Wallet Connected: {tonWallet?.account.address}</p>}
             <h3 className="text-xl font-semibold mb-2">Assets</h3>
             {isLoading ? (
               <Loader className="animate-spin text-primary w-8 h-8" />
