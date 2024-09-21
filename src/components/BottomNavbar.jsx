@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIcon, SearchIcon, BookmarkIcon } from 'lucide-react';
+import { HomeIcon, SearchIcon, BookmarkIcon, WalletIcon } from 'lucide-react';
 
 const BottomNavbar = () => {
   const location = useLocation();
@@ -9,6 +9,7 @@ const BottomNavbar = () => {
     { to: '/', icon: HomeIcon, label: 'Home' },
     { to: '/search', icon: SearchIcon, label: 'Search' },
     { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
+    { to: '/wallet', icon: WalletIcon, label: 'Wallet' },
   ];
 
   return (

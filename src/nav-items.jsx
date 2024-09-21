@@ -1,8 +1,9 @@
-import { HomeIcon, SearchIcon, BookmarkIcon, UserIcon } from "lucide-react";
+import { HomeIcon, SearchIcon, BookmarkIcon, UserIcon, WalletIcon } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Search from "./pages/Search.jsx";
 import Bookmark from "./pages/Bookmark.jsx";
 import Login from "./pages/Login.jsx";
+import Wallet from "./pages/Wallet.jsx";
 
 export const navItems = [
   {
@@ -28,5 +29,11 @@ export const navItems = [
     to: "/login",
     icon: <UserIcon className="h-4 w-4" />,
     page: <Login />,
+  },
+  {
+    title: "Wallet",
+    to: "/wallet",
+    icon: <WalletIcon className="h-4 w-4" />,
+    page: <Wallet />,
   },
 ];
