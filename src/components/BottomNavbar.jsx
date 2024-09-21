@@ -8,8 +8,8 @@ const BottomNavbar = () => {
   const navItems = [
     { to: '/', icon: HomeIcon, label: 'Home' },
     { to: '/search', icon: SearchIcon, label: 'Search' },
-    { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
     { to: '/wallet', icon: WalletIcon, label: 'Wallet' },
+    { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
   ];
 
   return (

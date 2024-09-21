@@ -92,13 +92,18 @@ const Wallet = () => {
     enabled: !!account || !!tonWallet,
   });
 
+  useEffect(() => {
+    console.log(assets);
+    console.log(error?.message);
+  }, [assets, error])
+
   return (
     <div className="bg-primary">
       <Header />
       <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
-        <h2 className="text-2xl font-bold mb-4">Wallet</h2>
+        {/* <h2 className="text-2xl font-bold mb-4">Wallet</h2> */}
         {!account && !tonWallet ? (
-          <div className="space-y-2">
+          <div className="flex items-center gap-4 flex-wrap">
             <Button onClick={() => connectWallet('ethereum')}>Connect Ethereum Wallet</Button>
             <Button onClick={() => connectWallet('base')}>Connect Base Wallet</Button>
             <Button onClick={() => connectWallet('solana')}>Connect Solana Wallet</Button>
@@ -106,13 +111,13 @@ const Wallet = () => {
           </div>
         ) : (
           <div>
-            {account && <p className="mb-4">Connected: {account}</p>}
-            {tonWallet && <p className="mb-4">TON Wallet Connected: {tonWallet.account.address}</p>}
+            {account && <p className="mb-4 truncate">Connected: {account}</p>}
+            {tonWallet && <p className="mb-4 truncate">TON Wallet Connected: <br /> {tonWallet.account.address}</p>}
             <h3 className="text-xl font-semibold mb-2">Assets</h3>
             {isLoading ? (
               <Loader className="animate-spin text-primary w-8 h-8" />
             ) : error ? (
-              <p className="text-red-500">Error loading assets</p>
+              <p className="text-red-500 truncate">Error loading assets. error: {error?.message}</p>
             ) : (
               <ul>
                 {assets.map((asset, index) => (

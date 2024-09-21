@@ -25,6 +25,8 @@ const Header = () => {
         return 'Login';
       case '/signup':
         return 'Sign Up';
+      case '/wallet':
+        return 'Wallet'
       default:
         if (location.pathname.startsWith('/token/')) {
           return 'Token Details';

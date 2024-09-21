@@ -18,6 +18,8 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
+        "url": process.env.NODE_ENV === 'production' ? 'https://https://token-tracker-view.vercel.app' : 'http://localhost:8080',
+        "iconUrl": process.env.NODE_ENV === "production" ? "https://https://token-tracker-view.vercel.app/icon-144.png" : "http://localhost:8080/icon-144.png",
         "name": "Crypto Tracker",
         "short_name": "Crypto Tracker",
         "start_url": "/",
@@ -26,7 +28,7 @@ export default defineConfig({
         "lang": "en",
         "scope": "/",
         "description": "crypto tracker app developed by saji",
-        "theme_color": "#ffffff",
+        "theme_color": "#581c87",
         "screenshots": [
           {
             "label": "crypto tracker",
