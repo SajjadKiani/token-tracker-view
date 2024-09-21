@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Loader } from 'lucide-react';
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react';
+import { TonConnectButton, useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
 import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
 
 const Wallet = () => {
@@ -13,6 +13,7 @@ const Wallet = () => {
   const [provider, setProvider] = useState(null);
   const [chainType, setChainType] = useState(null);
   const tonWallet = useTonWallet();
+  const [tonConnectUI, setOptions] = useTonConnectUI();
 
   useEffect(() => {
     if (window.ethereum) {
@@ -114,6 +115,9 @@ const Wallet = () => {
             {account && <p className="mb-4 truncate">Connected: {account}</p>}
             {tonWallet && <p className="mb-4 truncate">TON Wallet Connected: <br /> {tonWallet.account.address}</p>}
             <h3 className="text-xl font-semibold mb-2">Assets</h3>
+            <Button onClick={() => tonConnectUI.disconnect()}>
+              Disconnect
+            </Button>
             {isLoading ? (
               <Loader className="animate-spin text-primary w-8 h-8" />
             ) : error ? (
