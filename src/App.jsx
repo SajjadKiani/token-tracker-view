@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { SupabaseAuthProvider, useSupabaseAuth } from "./integrations/supabase";
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
 
@@ -57,10 +58,9 @@ const App = () => (
       <TonConnectUIProvider manifestUrl="https://token-tracker-view.vercel.app/tonconnect-manifest.json">
         <BrowserRouter>
           <SupabaseAuthProvider>
-            <div className="pb-16">
+            <Layout className="">
               <AppRoutes />
-            </div>
-            <BottomNavbar />
+            </Layout>
           </SupabaseAuthProvider>
         </BrowserRouter>
       </TonConnectUIProvider>

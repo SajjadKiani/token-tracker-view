@@ -57,9 +57,7 @@ const Search = () => {
   };
 
   return (
-    <div className="bg-primary">
-      <Header />
-      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4 shadow-t-xl'>
+      <div className=''>
         <Input
           type="text"
           value={searchTerm}
@@ -67,7 +65,6 @@ const Search = () => {
           placeholder="Search for tokens (e.g., SOL/USDT, Token Contract)"
         />
         {renderSearchResults()}
-      </div>
     </div>
   );
 };

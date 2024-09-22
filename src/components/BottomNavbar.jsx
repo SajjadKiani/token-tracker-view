@@ -6,29 +6,29 @@ const BottomNavbar = () => {
   const location = useLocation();
 
   const navItems = [
-    { to: '/', icon: HomeIcon, label: 'Home' },
-    { to: '/search', icon: SearchIcon, label: 'Search' },
+    // { to: '/search', icon: SearchIcon, label: 'Search' },
     { to: '/wallet', icon: WalletIcon, label: 'Wallet' },
+    { to: '/', icon: HomeIcon, label: 'Home' },
     { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
   ];
 
   return (
-    <nav className="fixed bottom-4 left-4 rounded-[18px] shadow-md right-4 bg-primary/90 py-1">
+    <nav className="fixed bottom-4 left-20 rounded-full shadow-md right-20 bg-[#262626]/90 py-1">
       <div className="flex justify-around items-center">
         {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
             className={`p-2 flex gap-1 items-center transition-all duration-500 ease-in-out ${
-              location.pathname === item.to ? 'text-primary bg-white rounded-full ' : 'text-white'
+              location.pathname === item.to ? 'bg-primary text-white rounded-full ' : 'text-white'
             }`}
           >
             <item.icon className="h-6 w-6" />
-            {location.pathname === item.to && (
+            {/* {location.pathname === item.to && (
               <span className="text-xs font-bold">
                 {item.label}
               </span>
-            )}
+            )} */}
           </Link>
         ))}
       </div>

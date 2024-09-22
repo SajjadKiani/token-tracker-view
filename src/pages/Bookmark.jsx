@@ -40,9 +40,7 @@ const Bookmark = () => {
   }
 
   return (
-    <div className="bg-primary">
-      <Header />
-      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
+      <div className=''>
         {!session?.user ? (
           <p>Please log in to view your bookmarks.</p>
         ) : isLoading ? (
@@ -59,7 +57,6 @@ const Bookmark = () => {
           <p>You haven't bookmarked any cryptocurrencies yet.</p>
         )}
       </div>
-    </div>
   );
 };
 

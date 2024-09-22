@@ -10,12 +10,7 @@ import { SupabaseAuthUI } from '@/integrations/supabase';
 const Login = () => {
 
   return (
-    <div className="bg-primary">
-      <Header />
-      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
-        <SupabaseAuthUI />
-      </div>
-    </div>
+      <SupabaseAuthUI />
   );
 };
 

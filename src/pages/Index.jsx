@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import CryptoCard from '../components/CryptoCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader } from 'lucide-react';
+import { DollarSign, Home, Loader, Rocket } from 'lucide-react';
 import Header from '../components/Header';
 import {
   Select,
@@ -74,9 +74,7 @@ const Index = () => {
   };
 
   return (
-    <div className="bg-primary">
-      <Header />
-      <div className='rounded-t-3xl pt-6 bg-background shadow-t-xl mt-4 px-4'>
+    <div className=''>
         <div className="mb-4">
           <Select value={selectedChainId} onValueChange={setSelectedChainId}>
             <SelectTrigger className="w-full">
@@ -109,7 +107,6 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
   );
 };
 

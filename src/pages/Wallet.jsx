@@ -99,9 +99,7 @@ const Wallet = () => {
   }, [assets, error])
 
   return (
-    <div className="bg-primary">
-      <Header />
-      <div className='rounded-t-3xl pt-6 bg-background mt-4 px-4'>
+      <div className=''>
         {/* <h2 className="text-2xl font-bold mb-4">Wallet</h2> */}
         {!account && !tonWallet ? (
           <div className="flex items-center gap-4 flex-wrap">
@@ -134,7 +132,6 @@ const Wallet = () => {
           </div>
         )}
       </div>
-    </div>
   );
 };
 

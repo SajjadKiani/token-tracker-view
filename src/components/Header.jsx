@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <div className='flex items-center justify-between px-5 bg-primary text-primary-foreground py-4'>
       {location.pathname !== '/' && (
-        <button onClick={handleBack} className="text-white">
+        <button onClick={handleBack} className="">
           <ArrowLeft className="h-6 w-6" />
         </button>
       )}
@@ -47,7 +47,7 @@ const Header = () => {
         { session &&
           <LogOut onClick={logout} />
         }
-        <Icon iconNode={astronautHelmet} className="h-6 w-6" />
+        {/* <Icon iconNode={astronautHelmet} className="h-6 w-6" /> */}
       </div>
     </div>
   );

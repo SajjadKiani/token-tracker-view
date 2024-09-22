@@ -13,7 +13,7 @@ const CryptoCard = ({ crypto }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 relative">
+    <div className="bg-white rounded-lg border shadow-sm p-4 relative">
       <div className='w-100'>
         {crypto.header && (
           <img 
