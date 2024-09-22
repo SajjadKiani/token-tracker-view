@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Header from '../components/Header';
 import { Button } from '@/components/ui/button';
-import { Loader } from 'lucide-react';
+import { Copy, Loader, LogOut, Unplug } from 'lucide-react';
 import { ethers } from 'ethers';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { TonConnectButton, useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
 import { getBaseBalance, getSolanaBalance, getTonBalance } from '../utils/chainUtils';
+import { Badge } from '@/components/ui/badge';
 
 const Wallet = () => {
   const [account, setAccount] = useState(null);
@@ -98,9 +99,20 @@ const Wallet = () => {
     console.log(error?.message);
   }, [assets, error])
 
+  const formatNumber = (value) => {
+    return value ? value.toLocaleString() : 'N/A';
+  };
+
   return (
-      <div className=''>
-        {/* <h2 className="text-2xl font-bold mb-4">Wallet</h2> */}
+      <div className='mt-6'>
+        {tonWallet &&
+        <Button onClick={() => tonConnectUI.disconnect()} size='icon'>
+          <Unplug />
+        </Button>
+        }
+        {
+          tonWallet && <h1 className='font-extrabold text-5xl text-center'>${formatNumber(1200)}</h1>
+        }
         {!account && !tonWallet ? (
           <div className="flex items-center gap-4 flex-wrap">
             <Button onClick={() => connectWallet('ethereum')}>Connect Ethereum Wallet</Button>
@@ -109,17 +121,13 @@ const Wallet = () => {
             <TonConnectButton />
           </div>
         ) : (
-          <div>
+          <div className='flex flex-col items-center gap-4 mt-4'>
             {account && <p className="mb-4 truncate">Connected: {account}</p>}
-            {tonWallet && <p className="mb-4 truncate">TON Wallet Connected: <br /> {tonWallet.account.address}</p>}
-            <h3 className="text-xl font-semibold mb-2">Assets</h3>
-            <Button onClick={() => tonConnectUI.disconnect()}>
-              Disconnect
-            </Button>
+            {tonWallet && <Badge variant={'secondary'}><p className="truncate text-center">{tonWallet.account.address.slice(0,10)}...</p> <Copy className='w-3 h-3 ml-1' /> </Badge>}
             {isLoading ? (
               <Loader className="animate-spin text-primary w-8 h-8" />
             ) : error ? (
-              <p className="text-red-500 truncate">Error loading assets. error: {error?.message}</p>
+              <p className="text-red-500 truncate w-full">Error loading assets. error: {error?.message}</p>
             ) : (
               <ul>
                 {assets.map((asset, index) => (
