@@ -32,7 +32,7 @@ export default defineConfig({
         "lang": "en",
         "scope": "/",
         "description": "crypto tracker app developed by saji",
-        "theme_color": "#581c87",
+        "theme_color": "#70D560",
         "screenshots": [
           {
             "label": "crypto tracker",
