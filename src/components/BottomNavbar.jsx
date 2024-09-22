@@ -6,10 +6,9 @@ const BottomNavbar = () => {
   const location = useLocation();
 
   const navItems = [
-    // { to: '/search', icon: SearchIcon, label: 'Search' },
-    { to: '/wallet', icon: WalletIcon, label: 'Wallet' },
+    { to: '/search', icon: SearchIcon, label: 'Search' },
     { to: '/', icon: HomeIcon, label: 'Home' },
-    { to: '/bookmark', icon: BookmarkIcon, label: 'Bookmark' },
+    { to: '/wallet', icon: WalletIcon, label: 'Wallet' },
   ];
 
   return (

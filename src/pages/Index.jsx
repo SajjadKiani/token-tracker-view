@@ -91,10 +91,11 @@ const Index = () => {
           </Select>
         </div>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="w-full">
             <TabsTrigger value="main">Main</TabsTrigger>
             <TabsTrigger value="boosted">Boost</TabsTrigger>
             <TabsTrigger value="topBoosts">Active</TabsTrigger>
+            <TabsTrigger value="bookmark">Bookmark</TabsTrigger>
           </TabsList>
           <TabsContent value="main">
             {renderContent(mainData, mainLoading, mainError)}

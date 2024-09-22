@@ -32,7 +32,7 @@ const SearchResultCard = ({ pair }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 relative">
+    <div className="bg-white rounded-lg border shadow-sm p-4 relative">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           {pair.info?.imageUrl && (
@@ -47,7 +47,7 @@ const SearchResultCard = ({ pair }) => {
           <BookmarkIcon className={`h-6 w-6 ${isBookmarked ? 'text-yellow-500 fill-current' : ''}`} />
         </button> */}
       </div>
-      <p className="text-sm text-gray-600 mb-2">{`${pair.baseToken?.name || 'Unknown'} / ${pair.quoteToken?.name || 'Unknown'}`}</p>
+      <p className="text-sm text-gray-600 mb-2 truncate">{`${pair.baseToken?.name || 'Unknown'} / ${pair.quoteToken?.name || 'Unknown'}`}</p>
       <div className="grid grid-cols-2 gap-2 text-sm">
         <div>
           <p><strong>Chain:</strong> {pair.chainId || 'N/A'}</p>
